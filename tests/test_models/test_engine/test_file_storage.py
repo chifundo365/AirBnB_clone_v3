@@ -113,3 +113,51 @@ class TestFileStorage(unittest.TestCase):
         with open("file.json", "r") as f:
             js = f.read()
         self.assertEqual(json.loads(string), json.loads(js))
+
+    @unittest.skipIf(models.storage_t == 'db', "Not testing file storage")
+    def test_get(self):
+        """Test the Filestorage get_method"""
+        my_state = State(name="california")
+        my_city = City(name="Lilongwe", state_id=my_state.id)
+        models.storage.new(my_state)
+        models.storage.new(my_city)
+        models.storage.save()
+
+        self.assertIs(models.storage.get(State, my_state.id), my_state)
+        self.assertEqual(models.storage.get(State, my_state.id).created_at, my_state.created_at)
+        self.assertEqual(models.storage.get(State, my_state.id).id, my_state.id)
+
+        self.assertIs(models.storage.get(City, my_city.id), my_city)
+        self.assertEqual(models.storage.get(City, my_city.id).id, my_city.id)
+        self.assertEqual(models.storage.get(City, my_city.id).created_at, my_city.created_at)
+        self.assertEqual(models.storage.get(City, my_city.id).updated_at, my_city.updated_at)
+    
+
+    @unittest.skipIf(models.storage_t == "db", "Not using FileStorage")
+    def test_count(self):
+        """Tests the count method of FileStorage"""
+
+        # empty all the objects from storage
+        all = models.storage.all().copy().values()
+        for obj in all:
+            models.storage.delete(obj)
+        models.storage.save()
+
+        city_1 = City(name="chicago")
+        city_2 = City(name="Los-angels")
+        state_1 = State("California")
+        user_1 = User(name="admin")
+        user_2 = User(name="Guest")
+        models.storage.new(city_1)
+        models.storage.new(city_2)
+        models.storage.new(state_1)
+        models.storage.new(user_1)
+        models.storage.new(user_2)
+        
+        models.storage.save()
+
+        self.assertEqual(models.storage.count(City), 2)
+        self.assertEqual(models.storage.count(State), 1)
+        self.assertEqual(models.storage.count(User), 2)
+        self.assertEqual(models.storage.count(Amenity), 0)
+        self.assertEqual(models.storage.count(), 5)

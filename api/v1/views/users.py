@@ -1,3 +1,7 @@
+#!/usr/bin/python3
+"""
+Flask View for User objects
+"""
 from flask import Flask, request, jsonify
 from api.v1.views import app_views
 from models import storage
@@ -33,7 +37,11 @@ def delete_user(user_id):
 @app_views.route("/users", methods=["POST"], strict_slashes=False)
 def create_user():
     """ Creates a User object """
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON", 400
+
     if not isinstance(data, dict):
         return "Not a JSON", 400
     elif data.get("email") is None:
@@ -52,7 +60,10 @@ def update_user(user_id):
     user = storage.get(User, user_id)
     if not user:
         abort(404)
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON"
     if not isinstance(data, dict):
         return "Not a JSON", 400
     for k, v in data.items():

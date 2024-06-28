@@ -74,8 +74,11 @@ def update_state(state_id):
 
     if not state:
         abort(404)
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON", 400
 
-    data = request.get_json()
     if not isinstance(data, dict):
         return "Not a JSON", 400
     for key, value in data.items():

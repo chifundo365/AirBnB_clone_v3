@@ -1,11 +1,11 @@
+#!/usr/bin/python3
+"""Testing file
+"""
+import json
 import requests
 
-url = "http://54.165.184.178:5000/api/v1/states"
-headers = {"Content-Type": "application/json"}
-data = {
-    "name": "New State"
-}
-
-response = requests.post(url, headers=headers, data=data)
-print(response.status_code)
-print(response.text)
+if __name__ == "__main__":
+    """ GET /api/v1/users/<amenity_id>
+    """
+    r = requests.get("http://0.0.0.0:5000/api/v1/users/{}".format("doesn_t_exist"))
+    print(r.status_code)

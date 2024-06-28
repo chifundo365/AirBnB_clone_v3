@@ -6,7 +6,7 @@ from models import storage
 from models.amenity import Amenity
 from models.city import City
 from models.place import Place
-from models.review import  Review
+from models.review import Review
 from models.state import State
 from models.user import User
 
@@ -16,9 +16,10 @@ def status():
     """Shows the status of the api"""
     return jsonify({"status": "OK"})
 
+
 @app_views.route("/stats", methods=['GET'], strict_slashes=False)
 def stats():
-    """ Shows the statistic of all the classes """
+    """ Shows the statistics of all the objects """
     dict = {
             "amenities": storage.count(Amenity),
             "cities": storage.count(City),
@@ -28,4 +29,3 @@ def stats():
             "users": storage.count(User)
             }
     return jsonify(dict), 200
-

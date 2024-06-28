@@ -7,9 +7,13 @@ from models.state import State
 from models.city import City
 
 
-@app_views.route("/states/<state_id>/cities", methods=["GET"], strict_slashes=False)
+@app_views.route(
+    "/states/<state_id>/cities",
+    methods=["GET"],
+    strict_slashes=False
+    )
 def get_state_cities(state_id):
-    """ 
+    """
     Retrivies the list of all the City objects of a state
 
     """
@@ -39,14 +43,18 @@ def delete_city(city_id):
     abort(404)
 
 
-@app_views.route("/states/<state_id>/cities", methods=["POST"], strict_slashes=False)
+@app_views.route(
+    "/states/<state_id>/cities",
+    methods=["POST"],
+    strict_slashes=False
+    )
 def create_city(state_id):
     """ Creates a City  object which is linked to a state"""
     state = storage.get(State, state_id)
     if not state:
         abort(404)
     data = request.get_json()
-    if not data or type(data) != dict:
+    if not isinstance(data, dict):
         return "Not a JSON", 400
     elif data.get("name") is None:
         return "Missing name", 400
@@ -68,11 +76,12 @@ def update_city(city_id):
         abort(404)
 
     data = request.get_json()
-    if not data or type(data) != dict:
+    if not isinstance(data, dict):
         print(data)
         return "Not a JSON", 400
     for key, value in data.items():
-        if key != 'id' or key != 'state_id' or key != 'created_at' or key != 'updated_at':
+        ignored_keys = ['state_id', 'id', 'created_at', 'updated_at']
+        if key not in ignored_keys:
             setattr(city, key, value)
     storage.save()
     return jsonify(city.to_dict()), 200

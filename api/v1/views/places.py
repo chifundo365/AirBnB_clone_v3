@@ -2,7 +2,6 @@
 """
 Contains Places view
 """
-
 from flask import Flask, request, jsonify, abort
 from api.v1.views import app_views
 from models import storage
@@ -11,7 +10,11 @@ from models.city import City
 from models.user import User
 
 
-@app_views.route("/cities/<city_id>/places", methods=["GET"], strict_slashes=False)
+@app_views.route(
+    "/cities/<city_id>/places",
+    methods=["GET"],
+    strict_slashes=False
+    )
 def get_places(city_id):
     """ Retrievies a list of all Place objects of a City """
     city = storage.get(City, city_id)
@@ -28,7 +31,12 @@ def get_place(place_id):
         return jsonify(place.to_dict()), 200
     abort(404)
 
-@app_views.route("/places/<place_id>", methods=["DELETE"], strict_slashes=False)
+
+@app_views.route(
+    "/places/<place_id>",
+    methods=["DELETE"],
+    strict_slashes=False
+    )
 def delete_place(place_id):
     """ Deletes a Place object with given id """
     place = storage.get(Place, place_id)
@@ -38,7 +46,11 @@ def delete_place(place_id):
         return jsonify({}), 200
     abort(404)
 
-@app_views.route("/cities/<city_id>/places", methods=["POST"], strict_slashes=False)
+
+@app_views.route(
+    "/cities/<city_id>/places",
+    methods=["POST"],
+    strict_slashes=False)
 def create_place(city_id):
     """ Creates a Place object """
     city = storage.get(City, city_id)
@@ -70,7 +82,7 @@ def update_place(place_id):
     if not isinstance(data, dict):
         return "Not a JSON", 400
     for k, v in data.items():
-        disallowed_keys = ["id", "user_id", "city_id", "created_at", "updated_at"]
-        if not k in disallowed_keys:
+        ignored_k = ["id", "user_id", "city_id", "created_at", "updated_at"]
+        if k not in ignored_k:
             setattr(place, k, v)
     return jsonify(place.to_dict()), 200

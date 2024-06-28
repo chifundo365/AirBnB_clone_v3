@@ -11,10 +11,9 @@ CORS(app_views)
 
 @app_views.route("/states", methods=["GET"], strict_slashes=False)
 def get_states():
-    """ 
-    Get all the states objects in storage 
+    """
+    Get all the states objects in storage
     Returns a list of dictionary_represeentations of the objects
-        
     """
     states = storage.all(State).values()
     states_dict_list = [state.to_dict() for state in states]
@@ -29,7 +28,12 @@ def get_state_with_id(state_id):
         return state.to_dict(), 200
     abort(404)
 
-@app_views.route("/states/<state_id>", methods=["DELETE"], strict_slashes=False)
+
+@app_views.route(
+    "/states/<state_id>",
+    methods=["DELETE"],
+    strict_slashes=False
+    )
 def delete_state(state_id):
     """ Deletes a state with a given stated_id """
     state = storage.get(State, state_id)
@@ -39,11 +43,12 @@ def delete_state(state_id):
         return jsonify({}), 200
     abort(404)
 
+
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
 def create_state():
     """ Creates a state  object"""
     data = request.get_json()
-    if not data or type(data) != dict:
+    if not isinstance(data, dict):
         return "Not a JSON", 400
     elif data.get("name") is None:
         return "Missing name", 400
@@ -54,24 +59,21 @@ def create_state():
     storage.reload()
     print(storage.get(State, new_state.id))
     return jsonify(new_state.to_dict()), 201
-        
+
 
 @app_views.route("/states/<state_id>", methods=["PUT"], strict_slashes=False)
 def update_state(state_id):
     """ Updates attributes of a state object"""
     state = storage.get(State, state_id)
-    
+
     if not state:
         abort(404)
 
     data = request.get_json()
-    if not data or type(data) != dict:
+    if not isinstance(data, dict):
         return "Not a JSON", 400
     for key, value in data.items():
         if key != 'id' or key != 'created_at' or key != 'updated_at':
             setattr(state, key, value)
     storage.save()
     return jsonify(state.to_dict()), 200
-
-
-

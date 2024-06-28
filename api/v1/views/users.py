@@ -10,6 +10,7 @@ def get_users():
     users = storage.all(User).values()
     return jsonify([user.to_dict() for user in users]), 200
 
+
 @app_views.route("/users/<user_id>", methods=["GET"], strict_slashes=False)
 def get_user(user_id):
     """ Retrieves a User obj  with a given id """
@@ -18,10 +19,11 @@ def get_user(user_id):
         return jsonify(user.to_dict()), 200
     abort(404)
 
+
 @app_views.route("/users/<user_id>", methods=["DELETE"], strict_slashes=False)
 def delete_user(user_id):
     """ Deletes a User object with given id """
-    user  = storage.get(User, user_id)
+    user = storage.get(User, user_id)
     if user:
         storage.delete(user)
         storage.save()
@@ -58,4 +60,3 @@ def update_user(user_id):
         if k not in disallowed_keys:
             setattr(user, k, v)
     return jsonify(user.to_dict()), 200
-

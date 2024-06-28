@@ -53,7 +53,11 @@ def create_city(state_id):
     state = storage.get(State, state_id)
     if not state:
         abort(404)
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON", 400
+
     if not isinstance(data, dict):
         return "Not a JSON", 400
     elif data.get("name") is None:
@@ -74,8 +78,11 @@ def update_city(city_id):
 
     if not city:
         abort(404)
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON", 400
 
-    data = request.get_json()
     if not isinstance(data, dict):
         print(data)
         return "Not a JSON", 400

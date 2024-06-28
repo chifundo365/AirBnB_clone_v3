@@ -1,3 +1,5 @@
+#!/usr/bin/python3
+""" Flask view for Amenities objects """
 from flask import Flask, request, jsonify, abort
 from api.v1.views import app_views
 from models import storage
@@ -38,7 +40,10 @@ def delete_amenity(amenity_id):
 
 @app_views.route("/amenities", methods=["POST"], strict_slashes=False)
 def create_amenity():
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON", 400
     if not isinstance(data, dict):
         return "Not a JSON", 400
     elif data.get('name') is None:
@@ -55,7 +60,10 @@ def update_amenity(amenity_id):
     """ Updates a Amenity object """
     amenity = storage.get(Amenity, amenity_id)
     if amenity:
-        data = request.get_json()
+        try:
+            data = request.get_json()
+        except Exception as e:
+            return "Not a JSON", 400
         if not isinstance(data, dict):
             return "Not a JSON", 400
         for k, v in data.items():

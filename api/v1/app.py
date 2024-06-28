@@ -11,10 +11,12 @@ app = Flask(__name__)
 cors = CORS(app, resources={"/*": {"origins": "0.0.0.0"}})
 app.register_blueprint(app_views)
 
+
 @app.teardown_appcontext
 def close_current_session(excp):
     """Closes sqlalchemy current session"""
     storage.close()
+
 
 @app.errorhandler(404)
 def not_found_json(err):
@@ -24,7 +26,7 @@ def not_found_json(err):
 
 if __name__ == "__main__":
     host = getenv("HBNB_API_HOST")
-    port  = getenv("HBNB_API_PORT")
+    port = getenv("HBNB_API_PORT")
 
     if host is None:
         host = "0.0.0.0"
@@ -33,5 +35,3 @@ if __name__ == "__main__":
         port = 5000
 
     app.run(port=port, host=host, threaded=True)
-
-

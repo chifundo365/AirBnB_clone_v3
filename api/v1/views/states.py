@@ -6,8 +6,6 @@ from api.v1.views import app_views
 from models import storage
 from models.state import State
 
-CORS(app_views)
-
 
 @app_views.route("/states", methods=["GET"], strict_slashes=False)
 def get_states():
@@ -47,7 +45,15 @@ def delete_state(state_id):
 @app_views.route("/states", methods=["POST"], strict_slashes=False)
 def create_state():
     """ Creates a state  object"""
-    data = request.get_json()
+    headers = request.headers
+
+    if headers.get('Content-Type') != 'application/json':
+        return "Not a JSON", 400
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON", 400
+
     if not isinstance(data, dict):
         return "Not a JSON", 400
     elif data.get("name") is None:

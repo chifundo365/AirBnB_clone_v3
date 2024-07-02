@@ -11,10 +11,10 @@ from models.user import User
 
 
 @app_views.route(
-    "/places/<place_id>/reviews",
-    methods=["GET"],
-    strict_slashes=False
-    )
+        "/places/<place_id>/reviews",
+        methods=["GET"],
+        strict_slashes=False
+        )
 def get_place_reviews(place_id):
     """Retrivies all the Review objects of a place"""
     place = storage.get(Place, place_id)
@@ -24,10 +24,10 @@ def get_place_reviews(place_id):
 
 
 @app_views.route(
-    "/reviews/<review_id>",
-    methods=["GET"],
-    strict_slashes=False
-    )
+        "/reviews/<review_id>",
+        methods=["GET"],
+        strict_slashes=False
+        )
 def get_review(review_id):
     """ Retrivies a Review object """
     review = storage.get(Review, review_id)
@@ -37,10 +37,10 @@ def get_review(review_id):
 
 
 @app_views.route(
-    "reviews/<review_id>",
-    methods=["DELETE"],
-    strict_slashes=False
-    )
+        "reviews/<review_id>",
+        methods=["DELETE"],
+        strict_slashes=False
+        )
 def delete_review(review_id):
     """ Deletes a Review object """
     review = storage.get(Review, review_id)
@@ -53,10 +53,10 @@ def delete_review(review_id):
 
 
 @app_views.route(
-    "places/<place_id>/reviews",
-    methods=["POST"],
-    strict_slashes=False
-    )
+        "places/<place_id>/reviews",
+        methods=["POST"],
+        strict_slashes=False
+        )
 def create_review(place_id):
     """ Creates a Review object of a particular place """
     place = storage.get(Place, place_id)
@@ -88,12 +88,12 @@ def create_review(place_id):
 @app_views.route("reviews/<review_id>", methods=["PUT"], strict_slashes=False)
 def update_review(review_id):
     """ Updates a Review object """
-    review = storage.get(review_id)
+    review = storage.get(Review, review_id)
 
     if not review:
         abort(404)
     try:
-       data = request.to_json()
+        data = request.to_json()
     except Exception as e:
         return "Not a JSON", 400
 

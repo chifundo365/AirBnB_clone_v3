@@ -93,12 +93,12 @@ def update_review(review_id):
     if not review:
         abort(404)
     try:
-        data = request.to_json()
+        data = request.get_json()
     except Exception as e:
         return "Not a JSON", 400
 
     ignored_keys = ["id", "user_id", "place_id", "created_at", "updated_at"]
-    for key, value in data:
+    for key, value in data.items():
         if key not in ignored_keys:
             setattr(review, key, value)
     storage.save()

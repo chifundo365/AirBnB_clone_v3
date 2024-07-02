@@ -78,7 +78,10 @@ def update_place(place_id):
     place = storage.get(Place, place_id)
     if not place:
         abort(404)
-    data = request.get_json()
+    try:
+        data = request.get_json()
+    except Exception as e:
+        return "Not a JSON"
     if not isinstance(data, dict):
         return "Not a JSON", 400
     for k, v in data.items():

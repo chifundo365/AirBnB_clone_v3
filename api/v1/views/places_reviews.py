@@ -97,8 +97,6 @@ def update_review(review_id):
     except Exception as e:
         return "Not a JSON", 400
 
-    if not isinstance(data, dict):
-        return "Not a JSON", 400
     ignored_keys = ["id", "user_id", "place_id", "created_at", "updated_at"]
     for key, value in data:
         if key not in ignored_keys:

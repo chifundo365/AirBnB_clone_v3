@@ -85,4 +85,6 @@ def update_place(place_id):
         ignored_k = ["id", "user_id", "city_id", "created_at", "updated_at"]
         if k not in ignored_k:
             setattr(place, k, v)
+    storage.save()
+    storage.reload()
     return jsonify(place.to_dict()), 200

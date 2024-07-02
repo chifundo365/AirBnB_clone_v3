@@ -92,7 +92,10 @@ def update_review(review_id):
 
     if not review:
         abort(404)
-    data = request.to_json()
+    try:
+       data = request.to_json()
+    except Exception as e:
+        return "Not a JSON", 400
 
     if not isinstance(data, dict):
         return "Not a JSON", 400
